@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home - Login</title>
+    <style>
+        /* --- الأساسيات --- */
+        @font-face {
+            font-family: 'Tajawal';
+            src: url('fonts/Tajawal-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Tajawal";
+        }
+
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+            font-family: "Tajawal";
+        }
+
+        body {
+            /* background: radial-gradient(circle at center, #4a0082 0%, #130026 100%); */
+            background: #4b0380;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+
+            background: url("./loogo\ 1.png") center/100px 100px repeat;
+
+        }
+
+        /* --- القائمة الجانبية والـ Overlay --- */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            /* ضبابية للخلفية */
+            display: none;
+            z-index: 90;
+            transition: 0.3s;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            padding: 140px 45px;
+            width: 280px;
+            height: 100%;
+            background: rgba(26, 0, 51, 0.98);
+            z-index: 100;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .navbar.active {
+            right: 0;
+        }
+
+        .navbar ul {
+            list-style: none;
+        }
+
+        .navbar ul li {
+            margin-bottom: 25px;
+        }
+
+        .navbar ul li a {
+            color: #eee;
+            text-decoration: none;
+            font-size: 1.2rem;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .navbar ul li a:hover {
+            color: #bc13fe;
+            padding-right: 10px;
+            filter: drop-shadow(1px 1px 10px #0df3c1);
+        }
+
+        /* --- أيقونة القائمة (الهامبرغر) --- */
+        .menu-icon {
+            position: fixed;
+            top: 5%;
+            right: 36px;
+            cursor: pointer;
+            z-index: 101;
+            padding: 2px 6px;
+            background: rgba(255, 255, 255, 0.678);
+            border-radius: 8px;
+        }
+
+        .menu-icon span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background: #190033;
+            margin: 6px 0;
+            transition: 0.4s;
+        }
+
+        /* تحويل الأيقونة لـ X عند الفتح */
+        .menu-icon.open span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .menu-icon.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-icon.open span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* --- بطاقة تسجيل الدخول --- */
+        .login-card {
+            /* background:linear-gradient(334deg, #e9c995 1%, #c38b38 58%) ; */
+            background: linear-gradient(125deg, #48037b 19%, #000000ed 75%);
+            width: 90%;
+            max-width: 380px;
+            padding: 50px 30px;
+            border-radius: 40px;
+            text-align: center;
+            box-shadow: 0 0px 50px rgba(0, 0, 0, 0.6);
+
+        }
+
+        .house-icon-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+        }
+
+        .logo {
+            width: 450px;
+            z-index: 2;
+            /* filter: drop-shadow(8px 12px 13px #5f3902); */
+            filter: drop-shadow(2px 4px 6px #00ffff);
+        }
+
+        .welcome-text {
+            margin-top: 35px;
+
+        }
+
+
+        .welcome-text h1 {
+            color: #03ffff;
+            /* color: #533305; */
+            font-size: 180%;
+            margin-bottom: 5px;
+            filter: drop-shadow(0px 0px 5px #ff3faf);
+        }
+
+
+
+        .input-group {
+            margin-top: 35px;
+        }
+
+        input::placeholder {
+            color: #03ffff;
+            font-family: "Tajawal";
+        }
+
+        .input-group input {
+            width: 100%;
+            background: rgb(255 255 255 / 29%);
+            border: none;
+            border-bottom: 1px solid rgba(188, 19, 254, 0.2);
+            padding: 15px;
+            margin-bottom: 15px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+            border-radius: 15px;
+            border: 0px;
+        }
+
+        .input-group input:focus {
+            background: #03ffff1a;
+            border-bottom: 1px solid #bb13fe85;
+        }
+
+        .sign-in-btn {
+            width: 100%;
+            max-width: 180px;
+            padding: 14px;
+            margin-top: 25px;
+            background: #ffffffe0;
+            color: #0b0068;
+            ;
+            border: 1px solid #333;
+            border-radius: 15px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .sign-in-btn:hover {
+            background: #d8feff;
+            border-color: #bc13fe;
+            box-shadow: 0 0 20px rgba(188, 19, 254, 0.4);
+        }
+
+        .callMy {
+            font-size: 12px;
+            color: #deb5ff;
+            ;
+            margin-top: 20px;
+        }
+
+        /* الخلفية */
+        .overlayPO {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            /* نستخدم flex دائماً */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+
+            /* التأثير الابتدائي (مخفي) */
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            /* سرعة التلاشي */
+        }
+
+        /* عندما تصبح النافذة نشطة */
+        .overlayPO.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* الصندوق الأبيض */
+        .popup-box {
+            background: white;
+            padding: 30px 10px;
+            border-radius: 10px;
+            width: 68% !important;
+            text-align: center;
+            direction: rtl;
+            transform: scale(0.7);
+            transition: all 0.4s ease;
+        }
+
+        /* زوم الصندوق عند التفعيل */
+        .overlayPO.active .popup-box {
+            transform: scale(1);
+        }
+
+        /* --- الاستجابة الكاملة --- */
+        @media (max-width: 550px) {
+            .welcome-text h1 {
+
+                font-size: 139%;
+
+                margin-top: 60px;
+            }
+
+            .logo {
+                width: 360px;
+                margin-top: 30px;
+            }
+
+            .popup-box {
+
+                max-height: 500px;
+                overflow: scroll;
+
+            }
+
+            .simple-table th,
+            .simple-table td {
+                font-size: 14px;
+                padding: 11px 8px !important;
+            }
+        }
+
+        .popup-box {
+
+            padding: 10px 10px;
+            width: 90%;
+        }
+
+        @media (min-width: 550px) {
+            .menu-icon {
+                background: #220835ad !important
+            }
+
+            .menu-icon span {
+                background-color: white;
+            }
+
+        }
+
+        @media (max-height: 600px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+
+            .house-icon-container {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+
+        /* الحاوية التي تتحكم في السكرول */
+        .table-scroll-container {
+            max-height: 400px;
+            /* يمكنك تغيير الارتفاع حسب رغبتك */
+            overflow-y: auto;
+            /* تفعيل التمرير العمودي */
+            overflow-x: hidden;
+            /* منع التمرير الأفقي الزائد */
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            direction: rtl;
+            background: #fff;
+        }
+
+        /* جعل رأس الجدول ثابتاً في الأعلى أثناء السكرول */
+        .simple-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #220835;
+            color: white;
+            box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+        }
+
+        .simple-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .simple-table th,
+        .simple-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            text-align: right;
+
+        }
+
+        /* تخصيص شكل شريط السكرول (Scrollbar) ليكون أجمل */
+        .table-scroll-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .table-scroll-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .table-scroll-container::-webkit-scrollbar-thumb {
+            background: #4dc3d3;
+            border-radius: 10px;
+        }
+
+        /* التجاوب مع الهواتف ومنع التداخل */
+        @media (max-width: 600px) {}
+
+        .closePOP {
+            padding: 10px 30px;
+            color: white;
+            background-color: #220835;
+            border-radius: 5px;
+            font-weight: bold;
+            border: 2px solid #220835;
+            transition: all 0.5s ease;
+            margin-top: 30px;
+            font-family: "Tajawal";
+
+        }
+
+        .closePOP:hover {
+            border: 2px solid #220835ad;
+            color: #220835ad;
+            background-color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #22083546;
+        }
+
+        .popTitle {
+            text-align: right;
+
+            color: #220835;
+            padding: 5px 0px 15px 20px;
+        }
+
+        .custom-checkbox {
+            color: #00ffffb8;
+        }
+
+        .remember-me-container input[type="checkbox"] {
+            accent-color: #00ffff71;
+            outline: none;
+            border: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="overlay" id="overlay"></div>
+    <nav class="navbar" id="navbar">
+        <ul>
+
+            <li><a href="#" onclick="togglePopupPO()">اسعار البطاقات</a></li>
+            <li><a href="#" onclick="togglePopupPO2()">نقاط البيع </a></li>
+
+        </ul>
+    </nav>
+
+
+    <div id="popup-overlayPO" class="overlayPO">
+        <div class="popup-box">
+            <div class="table-container">
+                <h2 class="popTitle"> اسعار البطاقات</h2>
+                <table class="simple-table">
+                    <thead>
+                        <tr>
+                            <th>الفئة</th>
+                            <th>السرعة</th>
+                            <th>التحميل</th>
+                            <th>السعر</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="الاسم">8 ساعات </td>
+                            <td data-label="السرعة">2M</td>
+                            <td data-label="التحميل">غير محدود</td>
+                            <td data-label="السعر">1 شيكل</td>
+                        </tr>
+                        <tr>
+                            <td data-label="الاسم">8 ساعات </td>
+                            <td data-label="السرعة">2M</td>
+                            <td data-label="التحميل">غير محدود</td>
+                            <td data-label="السعر">1 شيكل</td>
+                        </tr>
+                        <tr>
+                            <td data-label="الاسم">8 ساعات </td>
+                            <td data-label="السرعة">2M</td>
+                            <td data-label="التحميل">غير محدود</td>
+                            <td data-label="السعر">1 شيكل</td>
+                        </tr>
+                        <tr>
+                            <td data-label="الاسم">8 ساعات </td>
+                            <td data-label="السرعة">2M</td>
+                            <td data-label="التحميل">غير محدود</td>
+                            <td data-label="السعر">1 شيكل</td>
+                        </tr>
+
+
+
+
+                    </tbody>
+
+                </table>
+                <div>
+                    <button class="closePOP" onclick="togglePopupPO()">رجوع</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="popup-overlayPO2" class="overlayPO">
+        <div class="popup-box">
+            <div class="table-container">
+                <h2 class="popTitle">نقاط البيع </h2>
+                <table class="simple-table">
+                    <thead>
+                        <tr>
+                            <th>اسم النقطة</th>
+                            <th>العنوان</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="اسم النقطة"> سوبر ماركت </td>
+                            <td data-label="العنوان"> الزيتون</td>
+                        </tr>
+                        <tr>
+                            <td data-label="اسم النقطة"> سور ماركت </td>
+                            <td data-label="العنوان"> جامع صلاح الدين </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <button class="closePOP" onclick="togglePopupPO2()">رجوع</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="menu-icon" id="menuBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+ 
+    <div class="login-card">
+        <div class="house-icon-container">
+            <div class="glow-circle"></div>
+            <img src="loglog.png" alt="House" class="logo">
+        </div>
+
+        <div class="welcome-text">
+
+            <h1>شبكة ليون لخدمات الانترنت</h1>
+            <!-- <h1> Lion </h1> -->
+
+        </div>
+
+
+        <div class="input-group">
+            <div class="input-icons" style="position: relative; width: 100%;">
+                <input type="text" placeholder="اسم المستخدم" spellcheck="false">
+                <span style="font-size:20px; position: absolute;left: 5%; top: 13%; ">🦁</span>
+
+            </div>
+            <div class="input-icons" style="position: relative; width: 100%;">
+                <input type="password" placeholder="كلمة المرور">
+                <span style="font-size:20px; position: absolute;left: 5%; top: 13%;  ">&#128273</span>
+            </div>
+
+
+
+
+        </div>
+
+        <div class="remember-me-container">
+            <input type="checkbox" id="rememberMe" name="rememberMe">
+            <label class="custom-checkbox">حفظ بيانات الدخول
+                <span class="checkmark"></span>
+            </label>
+        </div>
+
+        <button class="sign-in-btn"> تسجيل الدخول</button>
+
+        <p class="callMy">
+            للاستفسار والدعم والفني : 0599121212
+        </p>
+    </div>
+
+ 
+
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const navbar = document.getElementById('navbar');
+        const overlay = document.getElementById('overlay');
+        const navLinks = document.querySelectorAll('.navbar a');
+        function toggleMenu() {
+            navbar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            menuBtn.classList.toggle('open');
+        }
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+        overlay.addEventListener('click', toggleMenu);
+        navLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+        navbar.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+        function togglePopupPO() {
+            const overlayPO = document.getElementById('popup-overlayPO');
+            overlayPO.classList.toggle('active');
+        }
+        function togglePopupPO2() {
+            const overlayPO2 = document.getElementById('popup-overlayPO2');
+            overlayPO2.classList.toggle('active');
+        }
+        window.onclick = function (event) {
+            const overlayPO2 = document.getElementById('popup-overlayPO2');
+            const overlayPO = document.getElementById('popup-overlayPO');
+            if (event.target === overlayPO2) {
+                overlayPO2.classList.remove('active');
+            }
+            if (event.target === overlayPO) {
+                overlayPO.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+
+</html>
