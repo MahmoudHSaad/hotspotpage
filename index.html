@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجاوب وفي المنتصف</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    @font-face {
+        font-family: 'Tajawal';
+        src: url('fonts/Tajawal-Regular.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: "Tajawal";
+    }
+
+    body {
+        /* background: linear-gradient(135deg, #00D1D1 0%, #BA55D3 100%); */
+        background-color: #fee440;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+
+    }
+
+    .centered-card {
+        background-color: #ffffff;
+        width: 100%;
+        max-width: 450px;
+        min-height: 300px;
+        border-radius: 25px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 25px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+        color: #1a305e;
+        font-size: 24px;
+    }
+
+    p {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .action-btn {
+        background: #9a5de5b0;
+        color: white;
+        border: 2px solid #ffffff00;
+        padding: 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.5s;
+    }
+
+    .action-btn:hover {
+        background: #ffffff70;
+        border: 2px solid #9b5de5;
+        color: #9b5de5;
+        transform: translateY(-2px);
+    }
+
+    svg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+    }
+
+    .links {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        font-size: 18px;
+        font-family: sans-serif;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+        margin-left: 1em;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    a img.icon {
+        display: inline-block;
+        height: 1em;
+        margin: 0 0 -0.1em 0.3em;
+    }
+
+    @keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .out-top {
+        animation: rotate 20s linear infinite;
+        transform-origin: 13px 25px;
+    }
+
+    .in-top {
+        animation: rotate 10s linear infinite;
+        transform-origin: 13px 25px;
+    }
+
+    .out-bottom {
+        animation: rotate 25s linear infinite;
+        transform-origin: 84px 93px;
+    }
+
+    .in-bottom {
+        animation: rotate 15s linear infinite;
+        transform-origin: 84px 93px;
+    }
+
+
+
+    .navbar {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 20px;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    /* 3. تصميم زر التوقل (التفاصيل الدقيقة للصورة) */
+    .menu-toggle {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        /* لكي يبدأ الخط القصير من نفس الجهة */
+        gap: 6px;
+        /* المسافة بين الخطين */
+        z-index: 1001;
+        padding: 10px;
+        margin-top: 65%;
+    }
+
+    .bar {
+        display: block;
+        height: 3px;
+        background-color: #112a50;
+        /* اللون الكحلي الغامق من الصورة */
+        border-radius: 2px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* الخط العلوي: طويل */
+    .bar.long {
+        width: 28px;
+    }
+
+    /* الخط السفلي: قصير كما في الصورة */
+    .bar.short {
+        width: 18px;
+    }
+
+    /* 4. القائمة التي ستظهر (تأثير الزجاج) */
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        /* مخفية في البداية */
+        width: 250px;
+        height: 100vh;
+
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        padding: 100px 40px;
+        gap: 25px;
+        transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 1000;
+
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px 0px 0px 15px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-menu.active {
+        right: 0;
+        /* تظهر عند الضغط */
+    }
+
+    .nav-menu a {
+        text-decoration: none;
+        color: #112a50;
+        font-size: 20px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .nav-menu a:hover {
+        color: #9b5de5;
+        padding-right: 10px;
+    }
+
+    /* 5. الأنيميشن عند الضغط (يتحول لشكل X) */
+    .menu-toggle.is-active .long {
+        transform: translateY(4.5px) rotate(45deg);
+        width: 28px;
+    }
+
+    .menu-toggle.is-active .short {
+        transform: translateY(-4.5px) rotate(-45deg);
+        width: 28px;
+        /* يتمدد ليصبح متساوي مع الخط الآخر في شكل X */
+    }
+
+    /* طبقة حماية خلفية عند فتح القائمة */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.2);
+        display: none;
+        z-index: 999;
+    }
+
+    .overlay.active {
+        display: block;
+    }
+
+    /* 5. تصميم فورم الإدخال */
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .input-group input {
+        padding: 14px 20px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.219);
+        outline: none;
+        color: #1a305e;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+
+
+    /* 6. زر حفظ الدخول (المطلوب) */
+    .remember-me-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 5px;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 14px;
+        color: #1a305e;
+        user-select: none;
+    }
+
+    .checkbox-label input {
+        display: none;
+    }
+
+    .custom-checkbox {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #112a50;
+        border-radius: 5px;
+        margin-left: 10px;
+        position: relative;
+        background: white;
+        transition: 0.3s;
+    }
+
+    .checkbox-label input:checked+.custom-checkbox {
+        background: #f15bb5;
+        border: 1px solid rgb(0, 204, 255);
+
+    }
+
+    .checkbox-label input:checked+.custom-checkbox::after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 1px;
+        width: 4px;
+        height: 8px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+
+
+
+    .scrolling-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #112a50;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        z-index: 2000;
+    }
+
+    .scrolling-wrapper {
+        display: flex;
+        width: max-content;
+        /* مهم جداً لكي يكون العرض على قد النص المكرر */
+        animation: smooth-scroll 15s linear infinite;
+        /* سرعة هادئة وانسيابية */
+    }
+
+    .scrolling-text {
+        color: #fee440;
+        font-size: 16px;
+        font-weight: bold;
+        white-space: nowrap;
+        /* المسافة هنا هي التي تحدد الفراغ بين نهاية النص وبداية تكراره */
+        padding-left: 100px;
+    }
+
+    @keyframes smooth-scroll {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            /* نحرك النص بمقدار نصف عرض الحاوية الكلي (عرض جملة واحدة مع مسافتها) */
+            transform: translateX(50%);
+        }
+    }
+
+    .scrolling-bar:hover .scrolling-wrapper {
+        animation-play-state: paused;
+        cursor: pointer;
+
+    }
+
+ 
+
+    #current-day {
+        display: block;
+        font-size: 14px;
+        color: #03ffff;
+        font-weight: bold;
+        filter: drop-shadow(0 0 3px rgba(3, 255, 255, 0.5));
+    }
+
+    #current-date {
+        display: block;
+        font-size: 11px;
+        color: #deb5ff;
+        margin-top: 2px;
+    }
+
+    /* --- هيدر اليوزر والتاريخ بجانب بعض --- */
+    .user-top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        padding: 0 10px;
+
+    }
+
+    .wellcome {
+        font-size: .56em;
+        text-align: right;
+
+        color: #122f54;
+    }
+
+
+    .date-side {
+        text-align: right;
+        /* التاريخ لليسار ليعطي توازن */
+    }
+
+    #current-day {
+        display: block;
+        font-size: 14px;
+        color: #03ffff;
+        font-weight: bold;
+        filter: drop-shadow(0 0 3px rgba(3, 255, 255, 0.5));
+    }
+
+    #current-date {
+        display: block;
+        font-size: 11px;
+        color: #deb5ff;
+        margin-top: 2px;
+    }
+
+    .overlayPO {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(4px);
+        display: flex;
+        /* نستخدم flex دائماً */
+        justify-content: center;
+        align-items: center;
+        z-index: 1000000;
+
+        /* التأثير الابتدائي (مخفي) */
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s ease;
+        /* سرعة التلاشي */
+
+    }
+
+    /* عندما تصبح النافذة نشطة */
+    .overlayPO.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* الصندوق الأبيض */
+    /* .popup-box {
+        background: rgb(255, 255, 255);
+        padding: 30px 10px;
+        border-radius: 10px;
+        width: 68% !important;
+        text-align: center;
+        direction: rtl;
+        transform: scale(0.7);
+        transition: all 0.4s ease;
+ 
+   
+    } */
+
+    .popup-box {
+        background: #fff;
+        padding: 30px 15px;
+        border-radius: 10px;
+        width: 90%;
+        /* يناسب كل الشاشات */
+        width: 68%;
+        /* أقصى عرض على الشاشات الكبيرة */
+        text-align: center;
+        direction: rtl;
+        transform: scale(0.95);
+        transition: all 0.4s ease;
+        max-height: 95vh;
+        /* يمنع خروجه عن الشاشة */
+        overflow-y: auto;
+        /* يعمل سكرول عند الحاجة */
+        box-sizing: border-box;
+    }
+
+
+    /* زوم الصندوق عند التفعيل */
+    .overlayPO.active .popup-box {
+        transform: scale(1);
+    }
+
+    .flex-container {
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: center;
+        height: 100%;
+        padding: 15px;
+        gap: 5px;
+        justify-content: space-evenly;
+        margin: 50px 0px 20px 0px;
+    }
+
+
+
+    .flex-container>div {
+
+        width: 20%;
+
+
+    }
+
+    .input-box {
+        position: relative;
+        width: 100%;
+    }
+
+    .input-box .icon {
+        position: absolute;
+        right: 10px;
+        /* غيّرها حسب اتجاهك */
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        pointer-events: none;
+        /* عشان ما تمنع الكتابة */
+    }
+
+    .input-box input {
+        width: 100%;
+        padding: 10px 40px 10px 10px;
+        /* مساحة للصورة من اليمين */
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+    input::placeholder {
+        font-size: 12px;
+        color: #1a305e;
+    }
+
+    input:focus {
+        background-color: #ffb7e227 !important;
+        border: 1px solid rgba(255, 255, 255, 0.329) !important;
+    }
+
+    .info {
+        color: #1a305e;
+
+        font-weight: bold;
+        font-size: 0.8em;
+    }
+
+    .popTitle {
+        color: #112a50;
+        width: 100%;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.185);
+        filter: drop-shadow(1px 1px 5px #f15bb5);
+    }
+
+    .flex-container .item1 {
+        padding: 5%;
+        min-height: 150px;
+        border-radius: 5px;
+        margin: 2%;
+        cursor: pointer;
+        background-color: #ffffff;
+        height: 100%;
+        transition: all 1s ease-in-out;
+        background-image: linear-gradient(143deg, #3aceff80, #f15bb591);
+        transform: translateY(-30px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        display: grid;
+        align-content: start;
+        justify-content: space-evenly;
+        padding-top: 20%;
+        color: #054e86;
+        box-shadow: 5px -1px 9px #ffa7d796;
+
+    }
+
+
+
+
+
+    .gradient-border {
+        position: relative;
+        cursor: pointer;
+        margin: 2%;
+        margin-bottom: 40px;
+        border-radius: 7px;
+        background-image: linear-gradient(143deg, #3aceff, #f15bb5);
+        transition: all ease-in-out .4s;
+    }
+
+    .gradient-border:hover {
+        box-shadow: 1px 1px 20px #f15bb5;
+        transform: translateY(-10px);
+    }
+
+    h4.price {
+        line-height: 0;
+        line-height: 0;
+        position: absolute;
+        width: 100%;
+        bottom: 15px;
+        color: white;
+    }
+
+    @media (min-width: 550px) {
+        .formCon form {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+    }
+
+    @media (min-width: 1000px) {
+        .glass-card {
+            margin-top: 5%;
+        }
+    }
+    @media (max-width: 1000px) {
+        .glass-card {
+            margin-top: 10%;
+        }
+
+        .popup-box {
+            width: 90% !important;
+            /* margin-top: 10%; */
+        }
+    }
+
+
+    @media (max-width: 550px) {
+        .formCon form {
+            width: 100%;
+        }
+
+        .centered-card {
+            padding: 25px 20px;
+        }
+
+        h1 {
+            font-size: 20px;
+        }
+
+        .glass-card {
+            margin-top: 20%;
+        }
+
+        .popup-box {
+            width: 60% !important;
+        }
+
+        .flex-container>div {
+
+            width: 45% !important;
+        }
+
+        .flex-container {
+            padding: 0;
+        }
+
+        .popup-box {
+            width: 90% !important;
+
+        }
+
+    }
+</style>
+
+<body>
+    <div class="scrolling-bar">
+        <div class="scrolling-wrapper">
+            <div class="scrolling-text">🚀 أهلاً بكم في شبكة لخدمات الانترنت.. أسرع خدمة في المنطقة.. عروض خاصة
+                للمشتركين الجدد.. اتصل بنا الآن! 🚀</div>
+            <div class="scrolling-text">🚀 أهلاً بكم في شبكة لخدمات الانترنت.. أسرع خدمة في المنطقة.. عروض خاصة
+                للمشتركين الجدد.. اتصل بنا الآن! 🚀</div>
+            <div class="scrolling-text">🚀 أهلاً بكم في شبكة لخدمات الانترنت.. أسرع خدمة في المنطقة.. عروض خاصة
+                للمشتركين الجدد.. اتصل بنا الآن! 🚀</div>
+            <div class="scrolling-text">🚀 أهلاً بكم في شبكة لخدمات الانترنت.. أسرع خدمة في المنطقة.. عروض خاصة
+                للمشتركين الجدد.. اتصل بنا الآن! 🚀</div>
+        </div>
+    </div>
+    <nav class="navbar">
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar long"></span>
+            <span class="bar short"></span>
+        </div>
+    </nav>
+
+    <div class="nav-menu " id="nav-menu">
+        <a href="#" onclick="togglePopupPO()">اسعار البطاقات</a>
+        <a href="#" onclick="togglePopupPO2()">نقاط البيع</a>
+
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="centered-card glass-card" style="z-index: 120;">
+        <div class="user-top-bar">
+            <div class="wellcome">
+                <h2> طاب يومك </h2>
+                <h2> أهلا بك من جديد </h2>
+            </div>
+            <div class="date-side">
+                <span id="current-day"></span>
+                <span id="current-date"></span>
+            </div>
+        </div>
+        <div class="logoImg">
+            <img src="lllogo.png" width="80%">
+
+        </div>
+        <h1>مرحباً بكم في شبكة لخدمات الانترنت </h1>
+
+        <div class="formCon">
+            <form class="input-group">
+
+                <div class="input-box">
+                    <img width="20px" src="user.svg" class="icon">
+                    <input type="text" placeholder="اسم المستخدم" required name="username">
+                </div>
+                <div class="input-box">
+                    <img width="20px" src="password.svg" class="icon">
+                    <input type="password" placeholder="كلمة المرور" required name="password">
+                </div>
+
+
+
+                <div class="remember-me-container">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe">
+                        <span class="custom-checkbox"></span>
+                        حفظ تسجيل الدخول
+                    </label>
+                </div>
+
+                <button type="submit" class="action-btn">دخول للشبكة</button>
+            </form>
+        </div>
+
+        <span class="info">
+            للاستفسار والدعم والفني : 0599121212
+        </span>
+    </div>
+
+
+
+
+
+
+
+
+    <svg preserveAspectRatio="xMidYMid slice" viewBox="10 10 80 80">
+        <defs>
+        </defs>
+        <path fill="#9b5de5" class="out-top"
+            d="M37-5C25.1-14.7,5.7-19.1-9.2-10-28.5,1.8-32.7,31.1-19.8,49c15.5,21.5,52.6,22,67.2,2.3C59.4,35,53.7,8.5,37-5Z" />
+        <path fill="#f15bb5" class="in-top"
+            d="M20.6,4.1C11.6,1.5-1.9,2.5-8,11.2-16.3,23.1-8.2,45.6,7.4,50S42.1,38.9,41,24.5C40.2,14.1,29.4,6.6,20.6,4.1Z" />
+        <path fill="#00bbf9" class="out-bottom"
+            d="M105.9,48.6c-12.4-8.2-29.3-4.8-39.4.8-23.4,12.8-37.7,51.9-19.1,74.1s63.9,15.3,76-5.6c7.6-13.3,1.8-31.1-2.3-43.8C117.6,63.3,114.7,54.3,105.9,48.6Z" />
+        <path fill="#00f5d4" class="in-bottom"
+            d="M102,67.1c-9.6-6.1-22-3.1-29.5,2-15.4,10.7-19.6,37.5-7.6,47.8s35.9,3.9,44.5-12.5C115.5,92.6,113.9,74.6,102,67.1Z" />
+    </svg>
+    <div id="popup-overlayPO" class="overlayPO">
+        <div class="popup-box">
+            <div class="table-container">
+                <h2 class="popTitle"> اسعار البطاقات</h2>
+
+
+
+                <div class="flex-container">
+
+                    <div class="gradient-border">
+
+                        <div class="item1 ">
+                            <h3> 8 ساعات</h3>
+                            <h6> التحميل غير محدود </h6>
+                            <h6> 2 ميجا 🚀🚀 </h6>
+                        </div>
+                        <h4 class="price"> 2 شيكل</h4>
+                    </div>
+                    <div class="gradient-border">
+
+                        <div class="item1 ">
+                            <h3> 12 ساعات</h3>
+                            <h6> التحميل غير محدود </h6>
+                            <h6> 3 ميجا 🚀🚀 </h6>
+                        </div>
+                        <h4 class="price"> 3 شيكل</h4>
+                    </div>
+                    <div class="gradient-border">
+
+                        <div class="item1 ">
+                            <h3> اسبوعي</h3>
+                            <h6> التحميل غير محدود </h6>
+                            <h6> 3 ميجا 🚀🚀 </h6>
+                        </div>
+                        <h4 class="price">10 شيكل</h4>
+                    </div>
+                    <div class="gradient-border">
+
+                        <div class="item1 ">
+                            <h3> شهري</h3>
+                            <h6> التحميل غير محدود </h6>
+                            <h6> 3 ميجا 🚀🚀 </h6>
+                        </div>
+                        <h4 class="price">50 شيكل</h4>
+                    </div>
+
+
+
+
+
+                </div>
+
+
+                <div style="width: 100%;">
+                    <button class="action-btn" style="width: 200px;" onclick="togglePopupPO()">رجوع</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="popup-overlayPO2" class="overlayPO">
+        <div class="popup-box">
+            <div class="table-container">
+                <h2 class="popTitle">نقاط البيع </h2>
+                <div class="flex-container">
+
+                    <div class="gradient-border">
+                        <div class="item1 ">
+                            <h3> سوبر ماركت ابو شعبان</h3>
+                        </div>
+                        <h4 class="price"> الزيتون</h4>
+                    </div>
+                    <div class="gradient-border">
+                        <div class="item1 ">
+                            <h3> سوبر ماركت ابو شعبان</h3>
+                        </div>
+                        <h4 class="price"> الزيتون</h4>
+                    </div>
+                    <div class="gradient-border">
+                        <div class="item1 ">
+                            <h3> سوبر ماركت ابو شعبان</h3>
+                        </div>
+                        <h4 class="price"> الزيتون</h4>
+                    </div>
+                    <div class="gradient-border">
+                        <div class="item1 ">
+                            <h3> سوبر ماركت ابو شعبان</h3>
+                        </div>
+                        <h4 class="price"> الزيتون</h4>
+                    </div>
+                    <div class="gradient-border">
+                        <div class="item1 ">
+                            <h3> سوبر ماركت ابو شعبان</h3>
+                        </div>
+                        <h4 class="price"> الزيتون</h4>
+                    </div>
+                    <div class="gradient-border">
+                        <div class="item1 ">
+                            <h3> سوبر ماركت ابو شعبان</h3>
+                        </div>
+                        <h4 class="price"> الزيتون</h4>
+                    </div>
+                    <div class="gradient-border">
+                        <div class="item1 ">
+                            <h3> سوبر ماركت ابو شعبان</h3>
+                        </div>
+                        <h4 class="price"> الزيتون</h4>
+                    </div>
+
+
+
+
+
+
+
+
+                </div>
+                <div style="width: 100%;">
+                    <button class="action-btn" style="width: 200px;" onclick="togglePopupPO2()">رجوع</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <script>
+        const menuBtn = document.getElementById('mobile-menu');
+        const navMenu = document.getElementById('nav-menu');
+        const overlay = document.getElementById('overlay');
+
+        // وظيفة التبديل (Toggle)
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('is-active');
+            navMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+
+        });
+
+        // إغلاق القائمة عند الضغط على الطبقة الخلفية
+        overlay.addEventListener('click', () => {
+            menuBtn.classList.remove('is-active');
+            navMenu.classList.remove('active');
+            overlay.classList.remove('active');
+
+        });
+
+        function updateDateTime() {
+            const now = new Date();
+            const dayOptions = { weekday: 'long' };
+            const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+
+            document.getElementById('current-day').innerText = now.toLocaleDateString('ar-EG', dayOptions);
+            document.getElementById('current-date').innerText = now.toLocaleDateString('ar-EG', dateOptions);
+        }
+        function togglePopupPO() {
+            const overlayPO = document.getElementById('popup-overlayPO');
+            overlayPO.classList.toggle('active');
+            menuBtn.classList.remove('is-active');
+            navMenu.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+        function togglePopupPO2() {
+            const overlayPO2 = document.getElementById('popup-overlayPO2');
+            overlayPO2.classList.toggle('active');
+            menuBtn.classList.remove('is-active');
+
+        }
+        window.onclick = function (event) {
+            const overlayPO2 = document.getElementById('popup-overlayPO2');
+            const overlayPO = document.getElementById('popup-overlayPO');
+            if (event.target === overlayPO2) {
+                overlayPO2.classList.remove('active');
+                menuBtn.classList.remove('is-active');
+
+            }
+            if (event.target === overlayPO) {
+                overlayPO.classList.remove('active');
+                menuBtn.classList.remove('is-active');
+
+            }
+
+
+        }
+        window.addEventListener("DOMContentLoaded", () => {
+    const usernameInput = document.getElementById("username");
+    if (usernameInput) {
+        usernameInput.focus();
+    }
+});
+
+
+        updateDateTime();   
+    </script>
+</body>
+
+</html>
